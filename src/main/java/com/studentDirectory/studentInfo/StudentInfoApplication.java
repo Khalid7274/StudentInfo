@@ -12,10 +12,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @SpringBootApplication
 public class StudentInfoApplication implements CommandLineRunner {
@@ -39,18 +36,52 @@ public class StudentInfoApplication implements CommandLineRunner {
 	@Transactional
 	public void run(String... args) throws Exception {
 
-		Teacher teacher1= new Teacher("Rahman","Ali","Rahman@gmail.com");
-		Teacher teacher2= new Teacher("Wali","Khan","walid_khan@yahoo.com");
+//		Teacher teacher1= new Teacher("Rahman","Ali","Rahman@gmail.com");
+//		Teacher teacher2= new Teacher("Wali","Khan","walid_khan@yahoo.com");
+//
+//		teacherRepo.save(teacher1);
+//		teacherRepo.save(teacher2);
+//
+//
+//		List<Student> studentList = Arrays.asList(
+//				new Student("Rashid", "Jan", "rashid@yahoo.com", new HashSet<>(Arrays.asList(teacher1))),
+//				new Student("Zalmi", "Wazir", "zalmi@yahoo.com", new HashSet<>(Arrays.asList(teacher2))),
+//				new Student("Shams", "Khan", "shams@yahoo.com", new HashSet<>(Arrays.asList(teacher1)))
+//		);
+//		studentRepo.saveAll(studentList);
+//	}
+		// Check if teachers already exist
+		Teacher teacher1 = teacherRepo.findByEmail("Rahman@gmail.com");
+		if (teacher1 == null) {
+			teacher1 = new Teacher("Rahman", "Ali", "Rahman@gmail.com");
+			teacherRepo.save(teacher1);
+		}
 
-		teacherRepo.save(teacher1);
-		teacherRepo.save(teacher2);
+		Teacher teacher2 = teacherRepo.findByEmail("walid_khan@yahoo.com");
+		if (teacher2 == null) {
+			teacher2 = new Teacher("Wali", "Khan", "walid_khan@yahoo.com");
+			teacherRepo.save(teacher2);
+		}
 
+		// Check if students already exist
+		List<Student> studentList = new ArrayList<>();
 
-		List<Student> studentList = Arrays.asList(
-				new Student("Rashid", "Jan", "rashid@yahoo.com", new HashSet<>(Arrays.asList(teacher1))),
-				new Student("Zalmi", "Wazir", "zalmi@yahoo.com", new HashSet<>(Arrays.asList(teacher2))),
-				new Student("Shams", "Khan", "shams@yahoo.com", new HashSet<>(Arrays.asList(teacher1)))
-		);
+		if (studentRepo.findByEmail("rashid@yahoo.com") == null) {
+			Student student1 = new Student("Rashid", "Jan", "rashid@yahoo.com", new HashSet<>(List.of(teacher1)));
+			studentList.add(student1);
+		}
+
+		if (studentRepo.findByEmail("zalmi@yahoo.com") == null) {
+			Student student2 = new Student("Zalmi", "Wazir", "zalmi@yahoo.com", new HashSet<>(List.of(teacher2)));
+			studentList.add(student2);
+		}
+
+		if (studentRepo.findByEmail("shams@yahoo.com") == null) {
+			Student student3 = new Student("Shams", "Khan", "shams@yahoo.com", new HashSet<>(List.of(teacher1)));
+			studentList.add(student3);
+		}
+
+		// Save all new students
 		studentRepo.saveAll(studentList);
 	}
 }
