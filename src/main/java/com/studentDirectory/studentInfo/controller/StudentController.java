@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,6 +29,18 @@ public class StudentController {
     public ResponseEntity<Student> getStudentById(@PathVariable Long id){
         Student student=studentService.getStudentById(id);
         return new ResponseEntity<>(student,HttpStatus.OK);
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<Student> addStudent(@RequestBody Student student){
+    Student student1=studentService.saveStudent(student);
+    return new ResponseEntity<>(student1,HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/remove")
+    public ResponseEntity<Void> removeById(@PathVariable Long id){
+        studentService.deleteStudent(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

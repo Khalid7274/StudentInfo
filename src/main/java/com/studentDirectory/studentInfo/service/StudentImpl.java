@@ -37,4 +37,15 @@ public class StudentImpl implements StudentService{
                 orElseThrow(()->new ResourceNotFoundException("Student with Id: "+id+" Not found"));
     }
 
+    @Override
+    public Student saveStudent(Student student) {
+        return studentRepo.save(student);
+    }
+
+    @Override
+    public void deleteStudent(Long id) {
+        studentRepo.deleteById(id);
+    }
+
+
 }
