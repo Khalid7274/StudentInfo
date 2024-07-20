@@ -1,10 +1,13 @@
 package com.studentDirectory.studentInfo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
 @Entity
 public class Student {
     @Id
@@ -14,13 +17,13 @@ public class Student {
     private String lastName;
     private String email;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "student_teacher",
             joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "teacher_id")
     )
-    @JsonManagedReference
+
     private Set<Teacher> teachers = new HashSet<>();
 
     public Student() {}

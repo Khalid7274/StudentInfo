@@ -67,7 +67,10 @@ public class StudentInfoApplication implements CommandLineRunner {
 		List<Student> studentList = new ArrayList<>();
 
 		if (studentRepo.findByEmail("rashid@yahoo.com") == null) {
-			Student student1 = new Student("Rashid", "Jan", "rashid@yahoo.com", new HashSet<>(List.of(teacher1)));
+			Student student1 = new Student("Rashid",
+					"Jan",
+					"rashid@yahoo.com",
+					new HashSet<>(List.of(teacher1)));
 			studentList.add(student1);
 		}
 

@@ -1,7 +1,9 @@
 package com.studentDirectory.studentInfo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.studentDirectory.studentInfo.entity.Student;
 import jakarta.persistence.*;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -16,7 +18,7 @@ public class Teacher {
     private String email;
 
     @ManyToMany(mappedBy = "teachers")
-    @JsonBackReference
+    @JsonIgnore
     private Set<Student> students = new HashSet<>();
 
     public Teacher() {}
