@@ -7,9 +7,6 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -20,9 +17,9 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
 
-    //Add support for JDBC no more hardcode
+    // Add support for JDBC no more hardcode
     @Bean
-    public JdbcUserDetailsManager userDetailsManager(DataSource dataSource){
+    public JdbcUserDetailsManager userDetailsManager(DataSource dataSource) {
         return new JdbcUserDetailsManager(dataSource);
     }
 
@@ -36,28 +33,33 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.PUT, "/api/student/update/**").hasRole("MANAGER")
                                 .requestMatchers(HttpMethod.DELETE, "/api/student/delete/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()
-                );
-        http.httpBasic(Customizer.withDefaults());
+                )
+                .httpBasic(Customizer.withDefaults());
 
         // Disable Cross Site Request Forgery (CSRF)
         // In general, not required for stateless Rest APIs that use GET, POST, PUT and DELETE
         http.csrf(csrf -> csrf.disable());
+
+        // Enable CORS
+        http.cors(Customizer.withDefaults());
+
         return http.build();
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource(){
-        UrlBasedCorsConfigurationSource source = new
-                UrlBasedCorsConfigurationSource();
+    public CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of(""));
-        config.setAllowedMethods(List.of(""));
+        config.setAllowedOrigins(List.of("http://127.0.0.1:5500")); // Add your allowed origins here
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE")); // Add your allowed methods here
         config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(false);
-        config.applyPermitDefaultValues();
-        source.registerCorsConfiguration("/**",config);
+        config.setAllowCredentials(true);
+        source.registerCorsConfiguration("/**", config);
         return source;
     }
+}
+
+
 
     /*
     @Bean
@@ -85,4 +87,4 @@ public class SecurityConfig {
 
      */
 
-}
+
